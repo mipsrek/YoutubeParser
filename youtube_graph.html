@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=XpkOPlZyFW8", "label": "I Caught Rare Fish For My Aquarium!...", "shape": "dot", "title": "I Caught Rare Fish For My Aquarium!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=lFAyVVbc-OI", "label": "Best Magic Trick Wins $1,000!...", "shape": "dot", "title": "Best Magic Trick Wins $1,000!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=98cvMenC4nk", "label": "I Found ABANDONED Aquarium Fish Living in MUD POND...", "shape": "dot", "title": "I Found ABANDONED Aquarium Fish Living in MUD POND!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=9qmfPvrm6ew", "label": "I Built a SECRET Zoo In My House!...", "shape": "dot", "title": "I Built a SECRET Zoo In My House!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=7-VTjn1e-xA", "label": "Best Haircut Wins $1,000!...", "shape": "dot", "title": "Best Haircut Wins $1,000!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=-OrnWgMBtAE", "label": "This Kid\u2019s Strength Will Leave You Speechless! | B...", "shape": "dot", "title": "This Kid\u2019s Strength Will Leave You Speechless! | Brent Rivera"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=HfcsdOWFBAk", "label": "I Survived 100 Days as STITCH in Minecraft...", "shape": "dot", "title": "I Survived 100 Days as STITCH in Minecraft"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=DAP3o4N-Zxs", "label": "Trapping MONSTER Sharks and Piranhas in SEWER!...", "shape": "dot", "title": "Trapping MONSTER Sharks and Piranhas in SEWER!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=scGArR4kF7A", "label": "I Found Diamonds In New York City Sidewalk Cracks!...", "shape": "dot", "title": "I Found Diamonds In New York City Sidewalk Cracks!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=hv7MLmuVkgE", "label": "Best Cake Art Wins $1,000!...", "shape": "dot", "title": "Best Cake Art Wins $1,000!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=S-urPnZysx0", "label": "I Built a SECRET Tree House in My Backyard!...", "shape": "dot", "title": "I Built a SECRET Tree House in My Backyard!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=cw_TI06Bfds", "label": "I Built a Theme Park In My House!...", "shape": "dot", "title": "I Built a Theme Park In My House!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=tBk3hAFC_ys", "label": "Toddlers vs Teens in ULTIMATE CHEER BATTLE! | Rebe...", "shape": "dot", "title": "Toddlers vs Teens in ULTIMATE CHEER BATTLE! | Rebecca Zamolo"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=q8mC7u028Mw", "label": "I TURNED MY HOUSE INTO A WATERPARK...", "shape": "dot", "title": "I TURNED MY HOUSE INTO A WATERPARK"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=EKCLyavka58", "label": "Best Sand Art Wins $1,000!...", "shape": "dot", "title": "Best Sand Art Wins $1,000!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=AZn7fgHzz0s", "label": "Can you SURVIVE this LIFE WITHOUT LAWS? | Brent Ri...", "shape": "dot", "title": "Can you SURVIVE this LIFE WITHOUT LAWS? | Brent Rivera"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=Kk3MGXkjVM0", "label": "Try Not To Laugh Watching Lexi Rivera and Brent Ri...", "shape": "dot", "title": "Try Not To Laugh Watching Lexi Rivera and Brent Rivera TikToks | Funny TikTok Compilation"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=I1R5ATGbs5o", "label": "Who Knows Me Better? *Best Friend vs Dad*...", "shape": "dot", "title": "Who Knows Me Better? *Best Friend vs Dad*"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=bcL7wZEuFK0", "label": "I Survived 100 Days as a MECHA SNAKE in Minecraft...", "shape": "dot", "title": "I Survived 100 Days as a MECHA SNAKE in Minecraft"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=HGFadoK7jz4\u0026pp=0gcJCbAJAYcqIYzv", "label": "Minecraft BASE DEFENSE: THE MOVIE...", "shape": "dot", "title": "Minecraft BASE DEFENSE: THE MOVIE"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=G07nPvEmEGE", "label": "0.00015% Chance of Unlocking This Mount in Roblox...", "shape": "dot", "title": "0.00015% Chance of Unlocking This Mount in Roblox"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=CTbmmTzz5ks", "label": "Jaw Dropping Catfish \u0026 My CRAZIEST Catch Yet!...", "shape": "dot", "title": "Jaw Dropping Catfish \u0026 My CRAZIEST Catch Yet!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=KjbsSze-8c8", "label": "Saving MONSTER FISH From FLOODED SEWER!...", "shape": "dot", "title": "Saving MONSTER FISH From FLOODED SEWER!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=Vh4SsukRua4", "label": "We Found Safes with Underwater Drones And Went Mag...", "shape": "dot", "title": "We Found Safes with Underwater Drones And Went Magnet Fishing"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=h86h1Tf5Y9U", "label": "Turning $1000 of Dirt Into A Gold Bar...", "shape": "dot", "title": "Turning $1000 of Dirt Into A Gold Bar"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=oR-KFW0_bbs", "label": "This was BURIED for 40+ years Until I FOUND IT...", "shape": "dot", "title": "This was BURIED for 40+ years Until I FOUND IT"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=TaXziyIjfHo", "label": "I Found Treasure In Places Nobody Would Ever Look!...", "shape": "dot", "title": "I Found Treasure In Places Nobody Would Ever Look!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=lIX-AzqQuKk", "label": "My Daughter Becomes School Principal for 24 Hours...", "shape": "dot", "title": "My Daughter Becomes School Principal for 24 Hours"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=O7wNiXaq0Eo", "label": "Best Electronic Art Wins $1,000!...", "shape": "dot", "title": "Best Electronic Art Wins $1,000!"}, {"color": "#97c2fc", "id": "https://www.youtube.com/watch?v=bJ_IWWfhBFc", "label": "If You Build It, I\u0027ll Pay For It!...", "shape": "dot", "title": "If You Build It, I\u0027ll Pay For It!"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "https://www.youtube.com/watch?v=XpkOPlZyFW8", "to": "https://www.youtube.com/watch?v=lFAyVVbc-OI"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=XpkOPlZyFW8", "to": "https://www.youtube.com/watch?v=98cvMenC4nk"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=XpkOPlZyFW8", "to": "https://www.youtube.com/watch?v=9qmfPvrm6ew"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=lFAyVVbc-OI", "to": "https://www.youtube.com/watch?v=7-VTjn1e-xA"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=lFAyVVbc-OI", "to": "https://www.youtube.com/watch?v=-OrnWgMBtAE"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=lFAyVVbc-OI", "to": "https://www.youtube.com/watch?v=HfcsdOWFBAk"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=98cvMenC4nk", "to": "https://www.youtube.com/watch?v=DAP3o4N-Zxs"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=98cvMenC4nk", "to": "https://www.youtube.com/watch?v=lFAyVVbc-OI"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=98cvMenC4nk", "to": "https://www.youtube.com/watch?v=scGArR4kF7A"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=9qmfPvrm6ew", "to": "https://www.youtube.com/watch?v=hv7MLmuVkgE"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=9qmfPvrm6ew", "to": "https://www.youtube.com/watch?v=S-urPnZysx0"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=9qmfPvrm6ew", "to": "https://www.youtube.com/watch?v=cw_TI06Bfds"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=7-VTjn1e-xA", "to": "https://www.youtube.com/watch?v=tBk3hAFC_ys"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=7-VTjn1e-xA", "to": "https://www.youtube.com/watch?v=q8mC7u028Mw"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=7-VTjn1e-xA", "to": "https://www.youtube.com/watch?v=EKCLyavka58"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=-OrnWgMBtAE", "to": "https://www.youtube.com/watch?v=AZn7fgHzz0s"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=-OrnWgMBtAE", "to": "https://www.youtube.com/watch?v=Kk3MGXkjVM0"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=-OrnWgMBtAE", "to": "https://www.youtube.com/watch?v=I1R5ATGbs5o"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=HfcsdOWFBAk", "to": "https://www.youtube.com/watch?v=bcL7wZEuFK0"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=HfcsdOWFBAk", "to": "https://www.youtube.com/watch?v=HGFadoK7jz4\u0026pp=0gcJCbAJAYcqIYzv"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=HfcsdOWFBAk", "to": "https://www.youtube.com/watch?v=G07nPvEmEGE"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=DAP3o4N-Zxs", "to": "https://www.youtube.com/watch?v=CTbmmTzz5ks"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=DAP3o4N-Zxs", "to": "https://www.youtube.com/watch?v=KjbsSze-8c8"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=DAP3o4N-Zxs", "to": "https://www.youtube.com/watch?v=Vh4SsukRua4"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=scGArR4kF7A", "to": "https://www.youtube.com/watch?v=h86h1Tf5Y9U"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=scGArR4kF7A", "to": "https://www.youtube.com/watch?v=oR-KFW0_bbs"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=scGArR4kF7A", "to": "https://www.youtube.com/watch?v=TaXziyIjfHo"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=hv7MLmuVkgE", "to": "https://www.youtube.com/watch?v=lIX-AzqQuKk"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=hv7MLmuVkgE", "to": "https://www.youtube.com/watch?v=O7wNiXaq0Eo"}, {"arrows": "to", "from": "https://www.youtube.com/watch?v=hv7MLmuVkgE", "to": "https://www.youtube.com/watch?v=bJ_IWWfhBFc"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "nodeDistance": 200,
+            "springConstant": 0.05,
+            "springLength": 200
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2025-05-28">
+    <creator>NetworkX 3.4.2</creator>
+  </meta>
+  <graph defaultedgetype="directed" mode="static" name="">
+    <attributes mode="static" class="node">
+      <attribute id="0" title="title" type="string" />
+    </attributes>
+    <nodes>
+      <node id="https://www.youtube.com/watch?v=XpkOPlZyFW8" label="https://www.youtube.com/watch?v=XpkOPlZyFW8">
+        <attvalues>
+          <attvalue for="0" value="I Caught Rare Fish For My Aquarium!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=lFAyVVbc-OI" label="https://www.youtube.com/watch?v=lFAyVVbc-OI">
+        <attvalues>
+          <attvalue for="0" value="Best Magic Trick Wins $1,000!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=98cvMenC4nk" label="https://www.youtube.com/watch?v=98cvMenC4nk">
+        <attvalues>
+          <attvalue for="0" value="I Found ABANDONED Aquarium Fish Living in MUD POND!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=9qmfPvrm6ew" label="https://www.youtube.com/watch?v=9qmfPvrm6ew">
+        <attvalues>
+          <attvalue for="0" value="I Built a SECRET Zoo In My House!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=7-VTjn1e-xA" label="https://www.youtube.com/watch?v=7-VTjn1e-xA">
+        <attvalues>
+          <attvalue for="0" value="Best Haircut Wins $1,000!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=-OrnWgMBtAE" label="https://www.youtube.com/watch?v=-OrnWgMBtAE">
+        <attvalues>
+          <attvalue for="0" value="This Kid’s Strength Will Leave You Speechless! | Brent Rivera" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=HfcsdOWFBAk" label="https://www.youtube.com/watch?v=HfcsdOWFBAk">
+        <attvalues>
+          <attvalue for="0" value="I Survived 100 Days as STITCH in Minecraft" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=DAP3o4N-Zxs" label="https://www.youtube.com/watch?v=DAP3o4N-Zxs">
+        <attvalues>
+          <attvalue for="0" value="Trapping MONSTER Sharks and Piranhas in SEWER!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=scGArR4kF7A" label="https://www.youtube.com/watch?v=scGArR4kF7A">
+        <attvalues>
+          <attvalue for="0" value="I Found Diamonds In New York City Sidewalk Cracks!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=hv7MLmuVkgE" label="https://www.youtube.com/watch?v=hv7MLmuVkgE">
+        <attvalues>
+          <attvalue for="0" value="Best Cake Art Wins $1,000!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=S-urPnZysx0" label="https://www.youtube.com/watch?v=S-urPnZysx0">
+        <attvalues>
+          <attvalue for="0" value="I Built a SECRET Tree House in My Backyard!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=cw_TI06Bfds" label="https://www.youtube.com/watch?v=cw_TI06Bfds">
+        <attvalues>
+          <attvalue for="0" value="I Built a Theme Park In My House!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=tBk3hAFC_ys" label="https://www.youtube.com/watch?v=tBk3hAFC_ys">
+        <attvalues>
+          <attvalue for="0" value="Toddlers vs Teens in ULTIMATE CHEER BATTLE! | Rebecca Zamolo" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=q8mC7u028Mw" label="https://www.youtube.com/watch?v=q8mC7u028Mw">
+        <attvalues>
+          <attvalue for="0" value="I TURNED MY HOUSE INTO A WATERPARK" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=EKCLyavka58" label="https://www.youtube.com/watch?v=EKCLyavka58">
+        <attvalues>
+          <attvalue for="0" value="Best Sand Art Wins $1,000!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=AZn7fgHzz0s" label="https://www.youtube.com/watch?v=AZn7fgHzz0s">
+        <attvalues>
+          <attvalue for="0" value="Can you SURVIVE this LIFE WITHOUT LAWS? | Brent Rivera" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=Kk3MGXkjVM0" label="https://www.youtube.com/watch?v=Kk3MGXkjVM0">
+        <attvalues>
+          <attvalue for="0" value="Try Not To Laugh Watching Lexi Rivera and Brent Rivera TikToks | Funny TikTok Compilation" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=I1R5ATGbs5o" label="https://www.youtube.com/watch?v=I1R5ATGbs5o">
+        <attvalues>
+          <attvalue for="0" value="Who Knows Me Better? *Best Friend vs Dad*" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=bcL7wZEuFK0" label="https://www.youtube.com/watch?v=bcL7wZEuFK0">
+        <attvalues>
+          <attvalue for="0" value="I Survived 100 Days as a MECHA SNAKE in Minecraft" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=HGFadoK7jz4&amp;pp=0gcJCbAJAYcqIYzv" label="https://www.youtube.com/watch?v=HGFadoK7jz4&amp;pp=0gcJCbAJAYcqIYzv">
+        <attvalues>
+          <attvalue for="0" value="Minecraft BASE DEFENSE: THE MOVIE" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=G07nPvEmEGE" label="https://www.youtube.com/watch?v=G07nPvEmEGE">
+        <attvalues>
+          <attvalue for="0" value="0.00015% Chance of Unlocking This Mount in Roblox" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=CTbmmTzz5ks" label="https://www.youtube.com/watch?v=CTbmmTzz5ks">
+        <attvalues>
+          <attvalue for="0" value="Jaw Dropping Catfish &amp; My CRAZIEST Catch Yet!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=KjbsSze-8c8" label="https://www.youtube.com/watch?v=KjbsSze-8c8">
+        <attvalues>
+          <attvalue for="0" value="Saving MONSTER FISH From FLOODED SEWER!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=Vh4SsukRua4" label="https://www.youtube.com/watch?v=Vh4SsukRua4">
+        <attvalues>
+          <attvalue for="0" value="We Found Safes with Underwater Drones And Went Magnet Fishing" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=h86h1Tf5Y9U" label="https://www.youtube.com/watch?v=h86h1Tf5Y9U">
+        <attvalues>
+          <attvalue for="0" value="Turning $1000 of Dirt Into A Gold Bar" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=oR-KFW0_bbs" label="https://www.youtube.com/watch?v=oR-KFW0_bbs">
+        <attvalues>
+          <attvalue for="0" value="This was BURIED for 40+ years Until I FOUND IT" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=TaXziyIjfHo" label="https://www.youtube.com/watch?v=TaXziyIjfHo">
+        <attvalues>
+          <attvalue for="0" value="I Found Treasure In Places Nobody Would Ever Look!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=lIX-AzqQuKk" label="https://www.youtube.com/watch?v=lIX-AzqQuKk">
+        <attvalues>
+          <attvalue for="0" value="My Daughter Becomes School Principal for 24 Hours" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=O7wNiXaq0Eo" label="https://www.youtube.com/watch?v=O7wNiXaq0Eo">
+        <attvalues>
+          <attvalue for="0" value="Best Electronic Art Wins $1,000!" />
+        </attvalues>
+      </node>
+      <node id="https://www.youtube.com/watch?v=bJ_IWWfhBFc" label="https://www.youtube.com/watch?v=bJ_IWWfhBFc">
+        <attvalues>
+          <attvalue for="0" value="If You Build It, I'll Pay For It!" />
+        </attvalues>
+      </node>
+    </nodes>
+    <edges>
+      <edge source="https://www.youtube.com/watch?v=XpkOPlZyFW8" target="https://www.youtube.com/watch?v=lFAyVVbc-OI" id="0" />
+      <edge source="https://www.youtube.com/watch?v=XpkOPlZyFW8" target="https://www.youtube.com/watch?v=98cvMenC4nk" id="1" />
+      <edge source="https://www.youtube.com/watch?v=XpkOPlZyFW8" target="https://www.youtube.com/watch?v=9qmfPvrm6ew" id="2" />
+      <edge source="https://www.youtube.com/watch?v=lFAyVVbc-OI" target="https://www.youtube.com/watch?v=7-VTjn1e-xA" id="3" />
+      <edge source="https://www.youtube.com/watch?v=lFAyVVbc-OI" target="https://www.youtube.com/watch?v=-OrnWgMBtAE" id="4" />
+      <edge source="https://www.youtube.com/watch?v=lFAyVVbc-OI" target="https://www.youtube.com/watch?v=HfcsdOWFBAk" id="5" />
+      <edge source="https://www.youtube.com/watch?v=98cvMenC4nk" target="https://www.youtube.com/watch?v=DAP3o4N-Zxs" id="6" />
+      <edge source="https://www.youtube.com/watch?v=98cvMenC4nk" target="https://www.youtube.com/watch?v=lFAyVVbc-OI" id="7" />
+      <edge source="https://www.youtube.com/watch?v=98cvMenC4nk" target="https://www.youtube.com/watch?v=scGArR4kF7A" id="8" />
+      <edge source="https://www.youtube.com/watch?v=9qmfPvrm6ew" target="https://www.youtube.com/watch?v=hv7MLmuVkgE" id="9" />
+      <edge source="https://www.youtube.com/watch?v=9qmfPvrm6ew" target="https://www.youtube.com/watch?v=S-urPnZysx0" id="10" />
+      <edge source="https://www.youtube.com/watch?v=9qmfPvrm6ew" target="https://www.youtube.com/watch?v=cw_TI06Bfds" id="11" />
+      <edge source="https://www.youtube.com/watch?v=7-VTjn1e-xA" target="https://www.youtube.com/watch?v=tBk3hAFC_ys" id="12" />
+      <edge source="https://www.youtube.com/watch?v=7-VTjn1e-xA" target="https://www.youtube.com/watch?v=q8mC7u028Mw" id="13" />
+      <edge source="https://www.youtube.com/watch?v=7-VTjn1e-xA" target="https://www.youtube.com/watch?v=EKCLyavka58" id="14" />
+      <edge source="https://www.youtube.com/watch?v=-OrnWgMBtAE" target="https://www.youtube.com/watch?v=AZn7fgHzz0s" id="15" />
+      <edge source="https://www.youtube.com/watch?v=-OrnWgMBtAE" target="https://www.youtube.com/watch?v=Kk3MGXkjVM0" id="16" />
+      <edge source="https://www.youtube.com/watch?v=-OrnWgMBtAE" target="https://www.youtube.com/watch?v=I1R5ATGbs5o" id="17" />
+      <edge source="https://www.youtube.com/watch?v=HfcsdOWFBAk" target="https://www.youtube.com/watch?v=bcL7wZEuFK0" id="18" />
+      <edge source="https://www.youtube.com/watch?v=HfcsdOWFBAk" target="https://www.youtube.com/watch?v=HGFadoK7jz4&amp;pp=0gcJCbAJAYcqIYzv" id="19" />
+      <edge source="https://www.youtube.com/watch?v=HfcsdOWFBAk" target="https://www.youtube.com/watch?v=G07nPvEmEGE" id="20" />
+      <edge source="https://www.youtube.com/watch?v=DAP3o4N-Zxs" target="https://www.youtube.com/watch?v=CTbmmTzz5ks" id="21" />
+      <edge source="https://www.youtube.com/watch?v=DAP3o4N-Zxs" target="https://www.youtube.com/watch?v=KjbsSze-8c8" id="22" />
+      <edge source="https://www.youtube.com/watch?v=DAP3o4N-Zxs" target="https://www.youtube.com/watch?v=Vh4SsukRua4" id="23" />
+      <edge source="https://www.youtube.com/watch?v=scGArR4kF7A" target="https://www.youtube.com/watch?v=h86h1Tf5Y9U" id="24" />
+      <edge source="https://www.youtube.com/watch?v=scGArR4kF7A" target="https://www.youtube.com/watch?v=oR-KFW0_bbs" id="25" />
+      <edge source="https://www.youtube.com/watch?v=scGArR4kF7A" target="https://www.youtube.com/watch?v=TaXziyIjfHo" id="26" />
+      <edge source="https://www.youtube.com/watch?v=hv7MLmuVkgE" target="https://www.youtube.com/watch?v=lIX-AzqQuKk" id="27" />
+      <edge source="https://www.youtube.com/watch?v=hv7MLmuVkgE" target="https://www.youtube.com/watch?v=O7wNiXaq0Eo" id="28" />
+      <edge source="https://www.youtube.com/watch?v=hv7MLmuVkgE" target="https://www.youtube.com/watch?v=bJ_IWWfhBFc" id="29" />
+    </edges>
+  </graph>
+</gexf>
