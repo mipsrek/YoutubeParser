@@ -8,9 +8,9 @@ import networkx as nx
 from selenium.webdriver.ie.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
-INITIAL_URL = "https://www.youtube.com/watch?v=k0f__prC5Ac"
-DEPTH = 5
-NUMBER_RECOMMENDATIONS = 1
+INITIAL_URL = "https://www.youtube.com/watch?v=CpCKkWMbmXU"
+DEPTH = 10
+NUMBER_RECOMMENDATIONS = 3
 
 
 def accept_cookies(driver):
@@ -34,9 +34,17 @@ def get_comments(driver):
 
     comments = driver.find_element(By.ID, "comments").find_elements(By.ID, "contents")
 
-# TODO get likes of video
+
+def get_channel(driver):
+    return driver.find_element(By.XPATH, "//*[@id=\"text\"]/a").text
+
+
+# TODO change to the actual number?
+# This is returning the text value of the button, not the actual number of likes
 def get_likes(driver):
-    return None
+    likes_xpath = "//*[@id=\"top-level-buttons-computed\"]/segmented-like-dislike-button-view-model/yt-smartimation/div/div/like-button-view-model/toggle-button-view-model/button-view-model/button/div[2]"
+    return driver.find_element(By.XPATH, likes_xpath).text
+
 
 def get_description(driver):
     if driver.find_elements(By.ID, "expand"):
@@ -49,6 +57,23 @@ def get_description(driver):
     else:
         return "No description available"
 
+# TODO the transcript is currently raw, so it has the timestamps. Remove them?
+def get_transcript(driver):
+    # if the description isn't open yet, though it should
+    if driver.find_element(By.ID, "expand").is_displayed():
+        driver.find_element(By.ID, "expand").click()
+
+    # click on show transcript
+    transcript_button = driver.find_element(By.XPATH, "//*[@id=\"primary-button\"]/ytd-button-renderer/yt-button-shape/button")
+    transcript_button.click()
+
+    # wait for tab to open
+    time.sleep(3)
+
+    raw_transcript = driver.find_element(By.ID, "segments-container").text
+    return raw_transcript
+
+
 
 def get_video_data(driver, video_url):
     driver.get(video_url)
@@ -58,10 +83,13 @@ def get_video_data(driver, video_url):
     if driver.find_elements(By.TAG_NAME, "ytd-consent-bump-v2-lightbox"):
         print("There is a consent box, accept it")
         accept_cookies(driver)
-        time.sleep(5)
+        time.sleep(10) # I know it's a lot but the internet is slow
 
     video_title = get_video_title(driver)
+    video_likes = get_likes(driver)
+    video_channel = get_channel(driver)
     video_desc = get_description(driver)
+    video_transcript = get_transcript(driver)
 
     recs_links = []
     try:
@@ -77,7 +105,7 @@ def get_video_data(driver, video_url):
         if len(recs_links) >= NUMBER_RECOMMENDATIONS:
             break
 
-    return video_title, list(set(recs_links)), video_desc
+    return video_title, list(set(recs_links)), video_desc, video_likes, video_channel, video_transcript
 
 
 def main():
@@ -96,12 +124,15 @@ def main():
         if current in visited:
             continue
 
-        title, recommendations, desc = get_video_data(driver, current)
-        print(title)
-        print(recommendations)
-        print(desc)
+        title, recommendations, desc, likes, channel, transcript = get_video_data(driver, current)
+        print("Title: ", title)
+        print("Recommendations: ", recommendations)
+        print("Description: ", desc)
+        print("Likes: ", likes)
+        print("Channel: ", channel)
+        print("Transcript: ", transcript)
 
-        graph.add_node(current, title=title, description=desc)
+        graph.add_node(current, title=title, description=desc, likes=likes, channel=channel, transcript=transcript)
         for recommendation in recommendations:
             graph.add_edge(current, recommendation)
             if recommendation not in visited:
@@ -117,7 +148,10 @@ def main():
         time.sleep(3)
         title = get_video_title(driver)
         desc = get_description(driver)
-        graph.add_node(recommendation, title=title, description=desc)
+        likes = get_likes(driver)
+        channel = get_channel(driver)
+        transcript = get_transcript(driver)
+        graph.add_node(recommendation, title=title, description=desc, likes=likes, channel=channel, transcript=transcript)
 
     driver.quit()
 
