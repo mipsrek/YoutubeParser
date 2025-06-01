@@ -1,3 +1,4 @@
+from os import waitpid
 from tokenize import String
 
 from selenium import webdriver
@@ -6,11 +7,15 @@ from selenium.webdriver.common.by import By
 import time
 import networkx as nx
 from selenium.webdriver.ie.service import Service
+from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support import expected_conditions as EC
 
 INITIAL_URL = "https://www.youtube.com/watch?v=CpCKkWMbmXU"
 DEPTH = 10
 NUMBER_RECOMMENDATIONS = 3
+KEY_WORDS = ["israel", "deep state", "climate change"]
+NUMBER_SEARCH = 1
 
 
 def accept_cookies(driver):
@@ -43,7 +48,10 @@ def get_channel(driver):
 # This is returning the text value of the button, not the actual number of likes
 def get_likes(driver):
     likes_xpath = "//*[@id=\"top-level-buttons-computed\"]/segmented-like-dislike-button-view-model/yt-smartimation/div/div/like-button-view-model/toggle-button-view-model/button-view-model/button/div[2]"
-    return driver.find_element(By.XPATH, likes_xpath).text
+    if driver.find_elements(By.XPATH, likes_xpath):
+        return driver.find_element(By.XPATH, likes_xpath).text
+    else:
+        return "Emtpy"
 
 
 def get_description(driver):
@@ -64,14 +72,54 @@ def get_transcript(driver):
         driver.find_element(By.ID, "expand").click()
 
     # click on show transcript
-    transcript_button = driver.find_element(By.XPATH, "//*[@id=\"primary-button\"]/ytd-button-renderer/yt-button-shape/button")
-    transcript_button.click()
+    if driver.find_elements(By.XPATH, "//*[@id=\"primary-button\"]/ytd-button-renderer/yt-button-shape/button"):
+        transcript_button = driver.find_element(By.XPATH, "//*[@id=\"primary-button\"]/ytd-button-renderer/yt-button-shape/button")
+        transcript_button.click()
 
-    # wait for tab to open
-    time.sleep(3)
+        # po caralho
+        wait = WebDriverWait(driver, 20)
+        raw_transcript = wait.until(
+            EC.presence_of_element_located((By.ID, "segments-container"))
+        )
 
-    raw_transcript = driver.find_element(By.ID, "segments-container").text
+        raw_transcript = raw_transcript.text
+
+    else:
+        raw_transcript = "No transcript available"
+
+
     return raw_transcript
+
+# TODO get the first videos for the search
+def initial_search(driver):
+
+    initial_urls = []
+    for word in KEY_WORDS:
+        word = word.lower()
+        word = word.replace(" ", "+")
+        driver.get(f"https://www.youtube.com/results?search_query={word}")
+
+        # if the page is asking for cookie consent, accept it first
+        if driver.find_elements(By.TAG_NAME, "ytd-consent-bump-v2-lightbox"):
+            print("There is a consent box, accept it")
+            accept_cookies(driver)
+            time.sleep(10)
+
+        videos_elements = driver.find_elements(By.TAG_NAME, "ytd-video-renderer")
+        count = 0
+        for video in videos_elements:
+            if count == NUMBER_SEARCH:
+                break
+
+            # get the SHORTS tag and skip it
+            if "SHORTS" in video.text:
+                continue
+
+            url = video.find_element(By.ID, "thumbnail").get_attribute("href")
+            initial_urls.append(url)
+            print(url)
+            count += 1
+    return initial_urls
 
 
 
@@ -115,8 +163,10 @@ def main():
 
     graph = nx.DiGraph()
     visited = set()
-    to_visit = [INITIAL_URL]
+    to_visit = [INITIAL_URL, INITIAL_URL] # testing
+    # to_visit = initial_search(driver)
 
+    # TODO fix the depth
     for _ in range(DEPTH):
         if not to_visit:
             break
@@ -126,17 +176,25 @@ def main():
 
         title, recommendations, desc, likes, channel, transcript = get_video_data(driver, current)
         print("Title: ", title)
-        print("Recommendations: ", recommendations)
-        print("Description: ", desc)
-        print("Likes: ", likes)
-        print("Channel: ", channel)
-        print("Transcript: ", transcript)
+        # print("Recommendations: ", recommendations)
+        # print("Description: ", desc)
+        # print("Likes: ", likes)
+        # print("Channel: ", channel)
+        # print("Transcript: ", transcript)
 
-        graph.add_node(current, title=title, description=desc, likes=likes, channel=channel, transcript=transcript)
+        # TODO videos that appear twice should be the same
+        print(current)
+        if current in visited:
+            print("Node already exists:", graph.nodes[current])
+        else:
+            graph.add_node(current, title=title, description=desc, likes=likes, channel=channel, transcript=transcript)
+
+
         for recommendation in recommendations:
             graph.add_edge(current, recommendation)
             if recommendation not in visited:
                 to_visit.append(recommendation)
+
 
         visited.add(current)
 
@@ -151,7 +209,11 @@ def main():
         likes = get_likes(driver)
         channel = get_channel(driver)
         transcript = get_transcript(driver)
-        graph.add_node(recommendation, title=title, description=desc, likes=likes, channel=channel, transcript=transcript)
+
+        if recommendation in visited:
+            print("Node already exists:", graph.nodes[recommendation])
+        else:
+            graph.add_node(recommendation, title=title, description=desc, likes=likes, channel=channel, transcript=transcript)
 
     driver.quit()
 
