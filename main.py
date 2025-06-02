@@ -1,5 +1,6 @@
 from os import waitpid
 from tokenize import String
+from urllib.parse import urlparse, parse_qs
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -71,13 +72,13 @@ def get_transcript(driver):
     if driver.find_element(By.ID, "expand").is_displayed():
         driver.find_element(By.ID, "expand").click()
 
-    # click on show transcript
+    # click on show transcript if exists
     if driver.find_elements(By.XPATH, "//*[@id=\"primary-button\"]/ytd-button-renderer/yt-button-shape/button"):
         transcript_button = driver.find_element(By.XPATH, "//*[@id=\"primary-button\"]/ytd-button-renderer/yt-button-shape/button")
         transcript_button.click()
 
         # po caralho
-        wait = WebDriverWait(driver, 20)
+        wait = WebDriverWait(driver, 60) # I know it's a lot, but we need the transcript, by all means
         raw_transcript = wait.until(
             EC.presence_of_element_located((By.ID, "segments-container"))
         )
@@ -120,6 +121,17 @@ def initial_search(driver):
     return initial_urls
 
 
+# This gets the v parameter value from the url, the video id
+def get_video_id(url):
+    parsed = urlparse(url)
+
+    if parsed.netloc in ["www.youtube.com", "youtube.com"]:
+        qs = parse_qs(parsed.query)
+        return qs.get("v", [None])[0]
+
+    return None
+
+
 def get_video_data(driver, video_url):
     driver.get(video_url)
     time.sleep(3)
@@ -130,6 +142,7 @@ def get_video_data(driver, video_url):
         accept_cookies(driver)
         time.sleep(10) # I know it's a lot but the internet is slow
 
+    video_id = get_video_id(video_url)
     video_title = get_video_title(driver)
     video_likes = get_likes(driver)
     video_channel = get_channel(driver)
@@ -150,7 +163,7 @@ def get_video_data(driver, video_url):
         if len(recs_links) >= NUMBER_RECOMMENDATIONS:
             break
 
-    return video_title, list(set(recs_links)), video_desc, video_likes, video_channel, video_transcript
+    return video_id, video_title, list(set(recs_links)), video_desc, video_likes, video_channel, video_transcript
 
 
 def main():
@@ -158,18 +171,19 @@ def main():
     options.add_argument('--headless')
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=Options())
 
-    graph = nx.DiGraph()
-    visited = set()
+    graph = nx.DiGraph() # THIS HAS **URL IDS** AS IDS
+    visited = set() # THIS IS A SET OF **URLS**
+    # to_visit = initial_search(driver) # THIS IS A LIST OF **URLS**
     to_visit = [INITIAL_URL, INITIAL_URL] # testing
-    # to_visit = initial_search(driver)
     d = 0
 
+    # TODO make the node id the video id, make the search based on the id to avoid unnecessary parameters
     for _ in range(DEPTH):
         to_visit_tmp = []
         print("Depth: ", d)
 
         for url in to_visit:
-            title, recommendations, description, likes, channel, transcript = get_video_data(driver, url)
+            video_id, title, recommendations, description, likes, channel, transcript = get_video_data(driver, url)
             print("Title: ", title)
             # print("Recommendations: ", recommendations)
             # print("Description: ", desc)
@@ -177,13 +191,14 @@ def main():
             # print("Channel: ", channel)
             # print("Transcript: ", transcript)
 
-            if url in visited:
-                print("Node already exists:", graph.nodes[url]["title"])
+            if video_id in [get_video_id(v) for v in visited]:
+                print("Node already exists:", graph.nodes[video_id]["title"])
             else:
-                graph.add_node(url, title=title, depth=d, description=description, likes=likes, channel=channel, transcript=transcript)
+                graph.add_node(video_id, url=url, title=title, depth=d, description=description, likes=likes, channel=channel, transcript=transcript)
 
             for recommendation in recommendations:
-                graph.add_edge(url, recommendation)
+                rec_id = get_video_id(recommendation)
+                graph.add_edge(video_id, rec_id)
                 if recommendation not in visited:
                     to_visit_tmp.append(recommendation)
 
@@ -192,43 +207,13 @@ def main():
         d += 1
         to_visit = to_visit_tmp
 
-    # # TODO fix the depth
-    # for _ in range(DEPTH):
-    #     if not to_visit:
-    #         break
-    #     current = to_visit.pop(0)
-    #     if current in visited:
-    #         continue
-    #
-    #     title, recommendations, desc, likes, channel, transcript = get_video_data(driver, current)
-    #     print("Title: ", title)
-    #     # print("Recommendations: ", recommendations)
-    #     # print("Description: ", desc)
-    #     # print("Likes: ", likes)
-    #     # print("Channel: ", channel)
-    #     # print("Transcript: ", transcript)
-    #
-    #     print(current)
-    #     if current in visited:
-    #         print("Node already exists:", graph.nodes[current])
-    #     else:
-    #         graph.add_node(current, title=title, description=desc, likes=likes, channel=channel, transcript=transcript)
-    #
-    #
-    #     for recommendation in recommendations:
-    #         graph.add_edge(current, recommendation)
-    #         if recommendation not in visited:
-    #             to_visit.append(recommendation)
-    #
-    #
-    #     visited.add(current)
-
     # This is to avoid empty nodes at the end
     print("Videos that still need to be visited:")
     print(to_visit)
     for recommendation in to_visit:
         driver.get(recommendation)
         time.sleep(3)
+        video_id = get_video_id(recommendation)
         title = get_video_title(driver)
         desc = get_description(driver)
         likes = get_likes(driver)
@@ -238,10 +223,10 @@ def main():
         print(title)
         print(recommendation)
 
-        if recommendation in visited:
-            print("Node already exists:", graph.nodes[recommendation]["title"])
+        if video_id in [get_video_id(v) for v in visited]:
+            print("Node already exists:", graph.nodes[video_id]["title"])
         else:
-            graph.add_node(recommendation, title=title, description=desc, likes=likes, channel=channel, transcript=transcript)
+            graph.add_node(video_id, url=recommendation, title=title, depth=d, description=desc, likes=likes, channel=channel, transcript=transcript)
 
     driver.quit()
 
