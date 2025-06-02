@@ -12,7 +12,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 
 INITIAL_URL = "https://www.youtube.com/watch?v=CpCKkWMbmXU"
-DEPTH = 10
+DEPTH = 4
 NUMBER_RECOMMENDATIONS = 3
 KEY_WORDS = ["israel", "deep state", "climate change"]
 NUMBER_SEARCH = 1
@@ -90,9 +90,7 @@ def get_transcript(driver):
 
     return raw_transcript
 
-# TODO get the first videos for the search
 def initial_search(driver):
-
     initial_urls = []
     for word in KEY_WORDS:
         word = word.lower()
@@ -120,7 +118,6 @@ def initial_search(driver):
             print(url)
             count += 1
     return initial_urls
-
 
 
 def get_video_data(driver, video_url):
@@ -165,38 +162,66 @@ def main():
     visited = set()
     to_visit = [INITIAL_URL, INITIAL_URL] # testing
     # to_visit = initial_search(driver)
+    d = 0
 
-    # TODO fix the depth
     for _ in range(DEPTH):
-        if not to_visit:
-            break
-        current = to_visit.pop(0)
-        if current in visited:
-            continue
+        to_visit_tmp = []
+        print("Depth: ", d)
 
-        title, recommendations, desc, likes, channel, transcript = get_video_data(driver, current)
-        print("Title: ", title)
-        # print("Recommendations: ", recommendations)
-        # print("Description: ", desc)
-        # print("Likes: ", likes)
-        # print("Channel: ", channel)
-        # print("Transcript: ", transcript)
+        for url in to_visit:
+            title, recommendations, description, likes, channel, transcript = get_video_data(driver, url)
+            print("Title: ", title)
+            # print("Recommendations: ", recommendations)
+            # print("Description: ", desc)
+            # print("Likes: ", likes)
+            # print("Channel: ", channel)
+            # print("Transcript: ", transcript)
 
-        # TODO videos that appear twice should be the same
-        print(current)
-        if current in visited:
-            print("Node already exists:", graph.nodes[current])
-        else:
-            graph.add_node(current, title=title, description=desc, likes=likes, channel=channel, transcript=transcript)
+            if url in visited:
+                print("Node already exists:", graph.nodes[url]["title"])
+            else:
+                graph.add_node(url, title=title, depth=d, description=description, likes=likes, channel=channel, transcript=transcript)
 
+            for recommendation in recommendations:
+                graph.add_edge(url, recommendation)
+                if recommendation not in visited:
+                    to_visit_tmp.append(recommendation)
 
-        for recommendation in recommendations:
-            graph.add_edge(current, recommendation)
-            if recommendation not in visited:
-                to_visit.append(recommendation)
+            visited.add(url)
 
+        d += 1
+        to_visit = to_visit_tmp
 
-        visited.add(current)
+    # # TODO fix the depth
+    # for _ in range(DEPTH):
+    #     if not to_visit:
+    #         break
+    #     current = to_visit.pop(0)
+    #     if current in visited:
+    #         continue
+    #
+    #     title, recommendations, desc, likes, channel, transcript = get_video_data(driver, current)
+    #     print("Title: ", title)
+    #     # print("Recommendations: ", recommendations)
+    #     # print("Description: ", desc)
+    #     # print("Likes: ", likes)
+    #     # print("Channel: ", channel)
+    #     # print("Transcript: ", transcript)
+    #
+    #     print(current)
+    #     if current in visited:
+    #         print("Node already exists:", graph.nodes[current])
+    #     else:
+    #         graph.add_node(current, title=title, description=desc, likes=likes, channel=channel, transcript=transcript)
+    #
+    #
+    #     for recommendation in recommendations:
+    #         graph.add_edge(current, recommendation)
+    #         if recommendation not in visited:
+    #             to_visit.append(recommendation)
+    #
+    #
+    #     visited.add(current)
 
     # This is to avoid empty nodes at the end
     print("Videos that still need to be visited:")
@@ -210,8 +235,11 @@ def main():
         channel = get_channel(driver)
         transcript = get_transcript(driver)
 
+        print(title)
+        print(recommendation)
+
         if recommendation in visited:
-            print("Node already exists:", graph.nodes[recommendation])
+            print("Node already exists:", graph.nodes[recommendation]["title"])
         else:
             graph.add_node(recommendation, title=title, description=desc, likes=likes, channel=channel, transcript=transcript)
 
