@@ -13,36 +13,43 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 
 INITIAL_URL = "https://www.youtube.com/watch?v=CpCKkWMbmXU"
-DEPTH = 4
+DEPTH = 3
 NUMBER_RECOMMENDATIONS = 3
 KEY_WORDS = ["israel", "deep state", "climate change"]
 NUMBER_SEARCH = 1
+
+# avoid repeating webdriver waits
+def wait_for(driver, condition, timeout=60):
+    return WebDriverWait(driver, timeout).until(condition)
 
 
 def accept_cookies(driver):
     driver.find_element(By.XPATH, "//*[@id=\"content\"]/div[2]/div[6]/div[1]/ytd-button-renderer[2]/yt-button-shape/button").click()
     print("Accepted cookies")
 
+
 def get_video_title(driver):
-    try:
-        video_title = (driver
-                       .find_element(By.ID, "title")
-                       .find_element(By.TAG_NAME, "yt-formatted-string").text)
-    except:
-        video_title = "**Empty**"
+    video_title = wait_for(driver, EC.presence_of_element_located((By.ID, "title")))
+    return video_title.text
 
-    return video_title
+    # try:
+    #     video_title = (driver
+    #                    .find_element(By.ID, "title")
+    #                    .find_element(By.TAG_NAME, "yt-formatted-string").text)
+    # except:
+    #     video_title = "**Empty**"
+    # return video_title
 
-# TODO get comments under video
-def get_comments(driver):
-    driver.execute_script("window.scrollTo(0, 600);")
-    time.sleep(3)
-
-    comments = driver.find_element(By.ID, "comments").find_elements(By.ID, "contents")
+# # TODO get comments under video
+# def get_comments(driver):
+#     driver.execute_script("window.scrollTo(0, 600);")
+#     time.sleep(3)
+#     comments = driver.find_element(By.ID, "comments").find_elements(By.ID, "contents")
 
 
 def get_channel(driver):
-    return driver.find_element(By.XPATH, "//*[@id=\"text\"]/a").text
+    channel = wait_for(driver, EC.presence_of_element_located((By.XPATH, "//*[@id=\"text\"]/a")))
+    return channel.text
 
 
 # TODO change to the actual number?
@@ -66,7 +73,7 @@ def get_description(driver):
     else:
         return "No description available"
 
-# TODO the transcript is currently raw, so it has the timestamps. Remove them?
+# TODO the transcript is currently the raw text, with no timestamps.
 def get_transcript(driver):
     # if the description isn't open yet, though it should
     if driver.find_element(By.ID, "expand").is_displayed():
@@ -77,19 +84,19 @@ def get_transcript(driver):
         transcript_button = driver.find_element(By.XPATH, "//*[@id=\"primary-button\"]/ytd-button-renderer/yt-button-shape/button")
         transcript_button.click()
 
-        # po caralho
-        wait = WebDriverWait(driver, 60) # I know it's a lot, but we need the transcript, by all means
-        raw_transcript = wait.until(
-            EC.presence_of_element_located((By.ID, "segments-container"))
-        )
-
-        raw_transcript = raw_transcript.text
+        try:
+            raw_transcript = wait_for(driver, EC.presence_of_element_located((By.ID, "segments-container")))
+            transcript_lines = raw_transcript.find_elements(By.TAG_NAME, "yt-formatted-string")
+            transcript = " ".join([transcript_line.text for transcript_line in transcript_lines])
+        except:
+            print("Transcript took too long to load")
+            transcript = "Empty"
 
     else:
-        raw_transcript = "No transcript available"
+        print("No transcript available")
+        transcript = "Empty"
 
-
-    return raw_transcript
+    return transcript
 
 def initial_search(driver):
     initial_urls = []
@@ -104,7 +111,7 @@ def initial_search(driver):
             accept_cookies(driver)
             time.sleep(10)
 
-        videos_elements = driver.find_elements(By.TAG_NAME, "ytd-video-renderer")
+        videos_elements = wait_for(driver, EC.presence_of_all_elements_located((By.TAG_NAME, "ytd-video-renderer")))
         count = 0
         for video in videos_elements:
             if count == NUMBER_SEARCH:
@@ -132,23 +139,7 @@ def get_video_id(url):
     return None
 
 
-def get_video_data(driver, video_url):
-    driver.get(video_url)
-    time.sleep(3)
-
-    # if the page is asking for cookie consent, accept it first
-    if driver.find_elements(By.TAG_NAME, "ytd-consent-bump-v2-lightbox"):
-        print("There is a consent box, accept it")
-        accept_cookies(driver)
-        time.sleep(10) # I know it's a lot but the internet is slow
-
-    video_id = get_video_id(video_url)
-    video_title = get_video_title(driver)
-    video_likes = get_likes(driver)
-    video_channel = get_channel(driver)
-    video_desc = get_description(driver)
-    video_transcript = get_transcript(driver)
-
+def get_recommended(driver):
     recs_links = []
     try:
         recs = (driver.find_element(By.ID, 'related')
@@ -163,7 +154,27 @@ def get_video_data(driver, video_url):
         if len(recs_links) >= NUMBER_RECOMMENDATIONS:
             break
 
-    return video_id, video_title, list(set(recs_links)), video_desc, video_likes, video_channel, video_transcript
+    return list(set(recs_links))
+
+
+def get_video_data(driver, video_url):
+    driver.get(video_url)
+    time.sleep(1)
+
+    # if the page is asking for cookie consent, accept it first
+    if driver.find_elements(By.TAG_NAME, "ytd-consent-bump-v2-lightbox"):
+        print("There is a consent box, accept it")
+        accept_cookies(driver)
+        # time.sleep(10)
+
+    video_title = get_video_title(driver)
+    video_likes = get_likes(driver)
+    video_channel = get_channel(driver)
+    video_desc = get_description(driver)
+    video_transcript = get_transcript(driver)
+    video_recs = get_recommended(driver)
+
+    return video_title, video_recs, video_desc, video_likes, video_channel, video_transcript
 
 
 def main():
@@ -173,28 +184,31 @@ def main():
 
     graph = nx.DiGraph() # THIS HAS **URL IDS** AS IDS
     visited = set() # THIS IS A SET OF **URLS**
-    # to_visit = initial_search(driver) # THIS IS A LIST OF **URLS**
-    to_visit = [INITIAL_URL, INITIAL_URL] # testing
+    to_visit = initial_search(driver) # THIS IS A LIST OF **URLS**
+    #to_visit = [INITIAL_URL, INITIAL_URL] # testing
     d = 0
 
-    # TODO make the node id the video id, make the search based on the id to avoid unnecessary parameters
     for _ in range(DEPTH):
         to_visit_tmp = []
         print("Depth: ", d)
 
         for url in to_visit:
-            video_id, title, recommendations, description, likes, channel, transcript = get_video_data(driver, url)
-            print("Title: ", title)
-            # print("Recommendations: ", recommendations)
-            # print("Description: ", desc)
-            # print("Likes: ", likes)
-            # print("Channel: ", channel)
-            # print("Transcript: ", transcript)
+            video_id = get_video_id(url)
 
+            # if the video is already visited only get the new recommended videos from it, no need to reload other info
             if video_id in [get_video_id(v) for v in visited]:
+                recommendations = get_recommended(driver)
                 print("Node already exists:", graph.nodes[video_id]["title"])
             else:
+                title, recommendations, description, likes, channel, transcript = get_video_data(driver, url)
+                print("Title: ", title)
                 graph.add_node(video_id, url=url, title=title, depth=d, description=description, likes=likes, channel=channel, transcript=transcript)
+
+                # print("Recommendations: ", recommendations)
+                # print("Description: ", desc)
+                # print("Likes: ", likes)
+                # print("Channel: ", channel)
+                # print("Transcript: ", transcript)
 
             for recommendation in recommendations:
                 rec_id = get_video_id(recommendation)
